@@ -4,6 +4,7 @@ from sqlalchemy import Column, String, Integer, create_engine, ForeignKey
 from flask_sqlalchemy import SQLAlchemy
 import json
 from config import DatabaseURI
+from flask_migrate import Migrate
 
 # Creating DB
 database_path = DatabaseURI.SQLALCHEMY_DATABASE_URI
@@ -15,6 +16,7 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     db.create_all()
+    migrate = Migrate(app, db)
 
 
 
