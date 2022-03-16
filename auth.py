@@ -9,15 +9,19 @@ import rsa
 # Auth0 Authorization parameters
 AUTH0_DOMAIN = 'dev-dz95eudq.us.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'casting' 
+API_AUDIENCE = 'casting'
 
 # AuthError exception
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 # Return token from Auth header
+
+
 def get_token_auth_header():
     authorization = request.headers.get('Authorization', None)
     if not authorization:
@@ -49,6 +53,8 @@ def get_token_auth_header():
     return token
 
 # check if permissions in the payload
+
+
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
@@ -59,12 +65,15 @@ def check_permissions(permission, payload):
     if permission not in payload['permissions']:
         raise AuthError({
             'code': 'requested_permission_not_in_payload',
-            'description': 'requested permission must be included in the payload permissions array'
+            'description': 'requested permission must be \
+                            included in the payload permissions array'
         }, 403)
 
     return True
 
 # return jwt
+
+
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
@@ -105,7 +114,8 @@ def verify_decode_jwt(token):
         except jwt.JWTClaimsError:
             raise AuthError({
                 'code': 'invalid_claims',
-                'description': 'Incorrect claims. Please, check the audience and issuer.'
+                'description': 'Incorrect claims. Please, \
+                                    check the audience and issuer.'
             }, 401)
 
         except Exception:
@@ -120,6 +130,8 @@ def verify_decode_jwt(token):
     }, 400)
 
 # ckeck authentication/ requires_auth decorator
+
+
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)

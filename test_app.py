@@ -7,6 +7,7 @@ from app import create_app
 from models import setup_db, Movie, Actor
 from config import DatabaseURI, assistant_token, director_token, producer_token
 
+
 class CastingAgencyTestCase(unittest.TestCase):
 
     # to setup the app and initialize the db
@@ -15,7 +16,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.client = self.app.test_client
 
         self.database_path = DatabaseURI.SQLALCHEMY_DATABASE_URI
-        
+
         setup_db(self.app, self.database_path)
 
         with self.app.app_context():
@@ -29,7 +30,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     #Tests - Successed
 
-    # test for getting all movies/ role assistant 
+    # test for getting all movies/ role assistant
     def test_get_movies(self):
         headers = {
             'Authorization': 'Bearer {}'.format(assistant_token)
@@ -58,7 +59,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(producer_token)
         }
-        res = self.client().post("/movies", headers=headers, json={"title":"vhh", "image":"https://pbs.twimg.com/media/FHfNybWWYAEFME7.png", "release_date":"2022-02-02"})
+        res = self.client().post("/movies", headers=headers,
+                                 json={"title": "vhh", "image": "https://pbs.twimg.com/media/FHfNybWWYAEFME7.png", "release_date": "2022-02-02"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -69,7 +71,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(director_token)
         }
-        res = self.client().post("/actors", headers=headers, json={"name":"998", "age":90, "gender":"male"})
+        res = self.client().post("/actors", headers=headers,
+                                 json={"name": "998", "age": 90, "gender": "male"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -80,7 +83,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(director_token)
         }
-        res = self.client().patch("/movies/5", headers=headers, json={"title":"ffff"})
+        res = self.client().patch(
+            "/movies/5", headers=headers, json={"title": "ffff"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -91,7 +95,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(producer_token)
         }
-        res = self.client().patch("/actors/10", headers=headers, json={"name":"dddr"})
+        res = self.client().patch(
+            "/actors/10", headers=headers, json={"name": "dddr"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -156,7 +161,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(producer_token)
         }
-        res = self.client().patch("/movies/200", headers=headers, json={"title": "NO"})
+        res = self.client().patch(
+            "/movies/200", headers=headers, json={"title": "NO"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -168,7 +174,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(director_token)
         }
-        res = self.client().patch("/actors/200", headers=headers, json={"name": "NO"})
+        res = self.client().patch(
+            "/actors/200", headers=headers, json={"name": "NO"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -180,7 +187,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(producer_token)
         }
-        res = self.client().post("/movies", headers=headers, json={"title": "", "image": "", "release_date":""})
+        res = self.client().post("/movies", headers=headers,
+                                 json={"title": "", "image": "", "release_date": ""})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -192,7 +200,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(director_token)
         }
-        res = self.client().post("/actors", headers=headers, json={"name":"", "age":"", "gender":""})
+        res = self.client().post("/actors", headers=headers,
+                                 json={"name": "", "age": "", "gender": ""})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -216,7 +225,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(assistant_token)
         }
-        res = self.client().patch('/movies', headers=headers, json={"title": "unauthorized"})
+        res = self.client().patch('/movies', headers=headers,
+                                  json={"title": "unauthorized"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
@@ -227,13 +237,14 @@ class CastingAgencyTestCase(unittest.TestCase):
         headers = {
             'Authorization': 'Bearer {}'.format(director_token)
         }
-        res = self.client().post('/movies', headers=headers, json={"title": "bkb", "image": "ff", "release_date": "2020-02-02"})
+        res = self.client().post('/movies', headers=headers,
+                                 json={"title": "bkb", "image": "ff", "release_date": "2020-02-02"})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["message"], "unauthorized")
 
-    
+
 if __name__ == "__main__":
     unittest.main()

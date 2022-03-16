@@ -10,6 +10,7 @@ from flask_migrate import Migrate
 database_path = DatabaseURI.SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy()
 
+
 def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -17,7 +18,6 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
     db.create_all()
     migrate = Migrate(app, db)
-
 
 
 # Movies Model
@@ -29,7 +29,7 @@ class Movie(db.Model):
     image = Column(String)
     release_date = Column(db.DateTime)
     actors = db.relationship('Actor', backref='Movie',
-                                lazy='dynamic')
+                             lazy='dynamic')
 
     def __init__(self, title, image, release_date):
         self.title = title
@@ -47,15 +47,14 @@ class Movie(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-
     def format(self):
         return {
-        'id': self.id,
-        'title': self.title,
-        'image': self.image,
-        'release_date': self.release_date
+            'id': self.id,
+            'title': self.title,
+            'image': self.image,
+            'release_date': self.release_date
         }
-    
+
 
 # Actors Model
 class Actor(db.Model):
@@ -84,16 +83,11 @@ class Actor(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-
     def format(self):
         return {
-        'id': self.id,
-        'name': self.name,
-        'age': self.age,
-        'gender': self.gender,
-        'movie_id': self.movie_id
+            'id': self.id,
+            'name': self.name,
+            'age': self.age,
+            'gender': self.gender,
+            'movie_id': self.movie_id
         }
- 
-
- 
-    
